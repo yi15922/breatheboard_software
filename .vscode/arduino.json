@@ -1,0 +1,6 @@
+{
+    "sketch": "breathing_lights.ino",
+    "configuration": "cpu=atmega328",
+    "board": "arduino:avr:nano",
+    "port": "/dev/tty.usbserial-AB0LRSQQ"
+}
