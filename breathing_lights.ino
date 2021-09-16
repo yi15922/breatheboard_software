@@ -88,11 +88,11 @@ void breathe_mode(){
     for (int i = 1; i < 9; i++){ 
       fadeOnLED(LEDPins[i], 5);
     }
-    delay(1000); 
+    delay(4000); 
     for (int i = 8; i > 0; i--){ 
       fadeOffLED(LEDPins[i], 5);
     }
-    delay(1000);
+    delay(4000);
   }
 }
 
@@ -220,7 +220,7 @@ void loop() {
         delay(500); 
       }
     }
-    delay(50); 
+    delay(100); 
   }
 
 }
