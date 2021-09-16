@@ -24,3 +24,5 @@ I saw this game in an arcade somewhere, but I don't remember what it was called.
 
 The implementation of this mode was far less complicated than I had imagined, as I was able to reuse most of the LEd scrolling functions created for the fidget mode. 
 
+## Known Bugs
+In the `setup()` code, one might notice that I reference the `LEDPins` array from index 1 to 9 rather than 0 to 8. For some unknown reason, if I don't pad index 0 of the `LEDPins` array with a number and start my iterator from index 1, the first LED does not turn on. I believe this is some form of memory addressing issue in the Arduino processor architecture. 
