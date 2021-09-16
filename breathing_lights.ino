@@ -6,6 +6,7 @@
 int LEDPins[] = {14, 13, 12, 11, 10, 9, 8, 7, 6}; 
 int inputPins[] = {BUTTON_BREATHE, BUTTON_LEFT, BUTTON_MIDDLE, BUTTON_RIGHT};
 
+
 void setup() {
   for (int i = 1; i < 9; i++){ 
     pinMode(LEDPins[i], OUTPUT); 
@@ -140,6 +141,44 @@ int moveLightRight(int lastOn){
   return nextToTurnOn; 
 }
 
+/* Scrolls lights from left to right, leaving a fixed light
+untouched. If the middle button is pressed right before the fixed light
+turns on, the function returns 1. Otherwise returns 0. */
+
+int scrollingLightGame(int timeGap, int fixedLight){ 
+  for (int i = 1; i < 9; i++){
+    if (i == fixedLight){ 
+      if (digitalRead(BUTTON_MIDDLE)){ 
+        digitalWrite(LEDPins[fixedLight], LOW); 
+        return 1;
+      }
+      delay(timeGap); 
+      continue; 
+    }
+    digitalWrite(LEDPins[i], HIGH); 
+    delay(timeGap);
+    digitalWrite(LEDPins[i], LOW); 
+  } 
+
+  for (int i = 8; i > 0; i--){ 
+    if (i == fixedLight){ 
+      if (digitalRead(BUTTON_MIDDLE)){ 
+        digitalWrite(LEDPins[fixedLight], LOW); 
+        return 1;
+      }
+      delay(timeGap); 
+      continue; 
+    }
+    digitalWrite(LEDPins[i], HIGH); 
+    delay(timeGap);
+    digitalWrite(LEDPins[i], LOW); 
+  }
+
+  return 0;
+
+}
+
+int gameLightDuration = 100; 
 
 void loop() {
   if (digitalRead(BUTTON_BREATHE)){ 
@@ -151,6 +190,37 @@ void loop() {
     scrollingLED(8); 
   } else if (digitalRead(BUTTON_RIGHT)){ 
     scrollingLED(1); 
+  }
+
+  /* Plays a game where user must press button when the scrolling lights
+  land on a particular light. Gets faster each time the user succeeds, until
+  the speed is too fast. Then a win condition is met and all lights will blink
+  until the reset button is pressed. */ 
+  if (digitalRead(BUTTON_MIDDLE)){ 
+    int fixedLight = rand() % 8 + 1; 
+    digitalWrite(LEDPins[fixedLight], HIGH); 
+    delay(500); 
+    while (1){
+      if (scrollingLightGame(gameLightDuration, fixedLight)) { 
+        gameLightDuration -= 5; 
+        break; 
+      }
+    }
+    if (gameLightDuration == 0){ 
+      while (1){ 
+        for (int i = 1; i < 9; i++){ 
+          pinMode(LEDPins[i], OUTPUT); 
+          digitalWrite(LEDPins[i], HIGH); 
+        }
+        delay (500); 
+        for (int i = 1; i < 9; i++){ 
+          pinMode(LEDPins[i], OUTPUT); 
+          digitalWrite(LEDPins[i], LOW); 
+        }
+        delay(500); 
+      }
+    }
+    delay(50); 
   }
 
 }
